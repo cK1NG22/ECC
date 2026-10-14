@@ -14,7 +14,6 @@ const { run: runQualityGate } = require('./quality-gate');
 const { run: runDesignQualityCheck } = require('./design-quality-check');
 const { run: runPostEditAccumulator } = require('./post-edit-accumulator');
 const { run: runConsoleWarn } = require('./post-edit-console-warn');
-const { run: runContextMonitor } = require('./ecc-context-monitor');
 
 const MAX_STDIN = resolveMaxStdin(process.env.ECC_HOOK_INPUT_MAX_BYTES, {
   writeDiagnostic: message => process.stderr.write(message)
@@ -26,8 +25,7 @@ const UPSTREAM_TRUNCATED = /^(1|true|yes)$/i.test(
 const SYNC_HOOKS = [
   { id: 'post:edit:design-quality-check', matcher: 'Edit|Write|MultiEdit', profiles: 'standard,strict', script: 'scripts/hooks/design-quality-check.js', run: runDesignQualityCheck },
   { id: 'post:edit:accumulator', matcher: 'Edit|Write|MultiEdit', profiles: 'standard,strict', script: 'scripts/hooks/post-edit-accumulator.js', run: runPostEditAccumulator },
-  { id: 'post:edit:console-warn', matcher: 'Edit', profiles: 'standard,strict', script: 'scripts/hooks/post-edit-console-warn.js', run: runConsoleWarn },
-  { id: 'post:ecc-context-monitor', matcher: '*', profiles: 'standard,strict', script: 'scripts/hooks/ecc-context-monitor.js', run: runContextMonitor }
+  { id: 'post:edit:console-warn', matcher: 'Edit', profiles: 'standard,strict', script: 'scripts/hooks/post-edit-console-warn.js', run: runConsoleWarn }
 ];
 
 const ASYNC_HOOKS = [
