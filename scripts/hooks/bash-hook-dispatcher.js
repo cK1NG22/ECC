@@ -13,7 +13,6 @@ const { run: runTmuxReminder } = require('./pre-bash-tmux-reminder');
 const { run: runGitPushReminder } = require('./pre-bash-git-push-reminder');
 const { run: runCommitQuality } = require('./pre-bash-commit-quality');
 const { run: runGateGuard } = require('./gateguard-fact-force');
-const { run: runCommandLog } = require('./post-bash-command-log');
 const { run: runPrCreated } = require('./post-bash-pr-created');
 const { run: runBuildComplete } = require('./post-bash-build-complete');
 
@@ -52,14 +51,6 @@ const PRE_BASH_HOOKS = [
 ];
 
 const POST_BASH_HOOKS = [
-  {
-    id: 'post:bash:command-log-audit',
-    run: rawInput => runCommandLog(rawInput, 'audit'),
-  },
-  {
-    id: 'post:bash:command-log-cost',
-    run: rawInput => runCommandLog(rawInput, 'cost'),
-  },
   {
     id: 'post:bash:pr-created',
     profiles: 'standard,strict',

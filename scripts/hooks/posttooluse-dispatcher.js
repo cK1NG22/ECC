@@ -14,12 +14,6 @@ const { run: runQualityGate } = require('./quality-gate');
 const { run: runDesignQualityCheck } = require('./design-quality-check');
 const { run: runPostEditAccumulator } = require('./post-edit-accumulator');
 const { run: runConsoleWarn } = require('./post-edit-console-warn');
-const { run: runGovernanceCapture } = require('./governance-capture');
-const { run: runSessionActivityTracker } = require('./session-activity-tracker');
-const { run: runObserve } = require('./observe-runner');
-const { run: runMetricsBridge } = require('./ecc-metrics-bridge');
-const { run: runContextMonitor } = require('./ecc-context-monitor');
-const { run: runSkillRunTracker } = require('./skill-run-tracker');
 
 const MAX_STDIN = resolveMaxStdin(process.env.ECC_HOOK_INPUT_MAX_BYTES, {
   writeDiagnostic: message => process.stderr.write(message)
@@ -31,11 +25,7 @@ const UPSTREAM_TRUNCATED = /^(1|true|yes)$/i.test(
 const SYNC_HOOKS = [
   { id: 'post:edit:design-quality-check', matcher: 'Edit|Write|MultiEdit', profiles: 'standard,strict', script: 'scripts/hooks/design-quality-check.js', run: runDesignQualityCheck },
   { id: 'post:edit:accumulator', matcher: 'Edit|Write|MultiEdit', profiles: 'standard,strict', script: 'scripts/hooks/post-edit-accumulator.js', run: runPostEditAccumulator },
-  { id: 'post:edit:console-warn', matcher: 'Edit', profiles: 'standard,strict', script: 'scripts/hooks/post-edit-console-warn.js', run: runConsoleWarn },
-  { id: 'post:governance-capture', matcher: 'Bash|PowerShell|Write|Edit|MultiEdit', profiles: 'standard,strict', script: 'scripts/hooks/governance-capture.js', run: runGovernanceCapture },
-  { id: 'post:session-activity-tracker', matcher: '*', profiles: 'standard,strict', script: 'scripts/hooks/session-activity-tracker.js', run: runSessionActivityTracker },
-  { id: 'post:ecc-metrics-bridge', matcher: '*', profiles: 'minimal,standard,strict', script: 'scripts/hooks/ecc-metrics-bridge.js', run: runMetricsBridge },
-  { id: 'post:ecc-context-monitor', matcher: '*', profiles: 'standard,strict', script: 'scripts/hooks/ecc-context-monitor.js', run: runContextMonitor }
+  { id: 'post:edit:console-warn', matcher: 'Edit', profiles: 'standard,strict', script: 'scripts/hooks/post-edit-console-warn.js', run: runConsoleWarn }
 ];
 
 const ASYNC_HOOKS = [
@@ -50,9 +40,7 @@ const ASYNC_HOOKS = [
       return { stdout: result.output, stderr: result.stderr, exitCode: result.exitCode };
     }
   },
-  { id: 'post:quality-gate', matcher: 'Edit|Write|MultiEdit', profiles: 'standard,strict', script: 'scripts/hooks/quality-gate.js', run: runQualityGate },
-  { id: 'post:observe:continuous-learning', matcher: '*', profiles: 'standard,strict', script: 'scripts/hooks/observe-runner.js', run: runObserve },
-  { id: 'post:skill:track', matcher: 'Skill', profiles: 'standard,strict', script: 'scripts/hooks/skill-run-tracker.js', run: runSkillRunTracker }
+  { id: 'post:quality-gate', matcher: 'Edit|Write|MultiEdit', profiles: 'standard,strict', script: 'scripts/hooks/quality-gate.js', run: runQualityGate }
 ];
 
 function getPluginRoot(env = process.env) {
